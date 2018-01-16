@@ -1,0 +1,11 @@
+[
+  {"id": 1, "title": "iPad 4 Mini", "price": 500.01, "inventory": 2, "image":"product.jpg"},
+  {"id": 2, "title": "H&M T-Shirt White", "price": 10.99, "inventory": 10, "image":"product.jpg"},
+  {"id": 3, "title": "Charli XCX - Sucker CD", "price": 19.99, "inventory": 5, "image":"product.jpg"},
+  {"id": 4, "title": "iPad 3 Mini", "price": 500.01, "inventory": 2, "image":"product.jpg"},
+  {"id": 5, "title": "H&M T-Shirt Blue", "price": 10.99, "inventory": 10, "image":"product.jpg"},
+  {"id": 6, "title": "TS XCX - Sucker CD", "price": 19.99, "inventory": 5, "image":"product.jpg"},
+  {"id": 7, "title": "iPad 5 Mini", "price": 500.01, "inventory": 2, "image":"product.jpg"},
+  {"id": 8, "title": "H&M T-Shirt Yellow", "price": 10.99, "inventory": 10, "image":"product.jpg"},
+  {"id": 9, "title": "LEE XCX - Sucker CD", "price": 19.99, "inventory": 5, "image":"product.jpg"}
+]

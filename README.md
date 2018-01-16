@@ -1,0 +1,1 @@
+Shopping cart developing using Nodejs Express, Sequelize ORM, React Redux
