@@ -11,7 +11,7 @@ const addedIds = (state = initialState.addedIds, action) =>{
 				return state;
 			return [...state, action.productId];
 		case 'REMOVE_FROM_CART':
-			let index = state.findIndex(id => id == action.productId);
+			let index = state.findIndex(id => id === action.productId);
 			return [...state.slice(0,index),...state.slice(index+1)];
 		default:
 			return state;

@@ -4,13 +4,15 @@ import { reducer as formReducer } from 'redux-form';
 import product, * as fromProducts from './product';
 import cart from './cart';
 import auth from './auth';
+import alert from './alert';
 
 export default combineReducers({
   products:product,
   cart,
   auth,
   routing: routerReducer,
-  form: formReducer
+  form: formReducer,
+  alert
 })
 
 export const getCartDetails = (state) =>{

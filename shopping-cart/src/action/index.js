@@ -1,8 +1,9 @@
-import Axios from 'axios';
+import Axios, { post } from 'axios';
 import jwt from 'jsonwebtoken';
 
 import api from '../api/api';
 import setAuthToken from '../util/setAuthToken';
+import { success, errorMessage } from './alert-action'
 
 const apiUrl = "http://localhost:3000/";
 export const receiveProducts = products =>{
@@ -82,7 +83,7 @@ export const loginSuccess = (token) =>
 export const authAction = (user) => {
 	console.log("Testing my auth")
 	return (dispatch) => {
-		return Axios.post(apiUrl+'login', user)
+		return Axios.post(`${apiUrl}login`, user)
 		.then(response => {
 			localStorage.setItem("jwtToken",response.data.token);
 			setAuthToken(response.data.token);
@@ -94,4 +95,36 @@ export const authAction = (user) => {
 			throw(error);
 		})
 	}
+}
+
+export function uploadSuccess({ data }) {
+	console.log(data);
+  return {
+    type: 'UPLOAD_DOCUMENT_SUCCESS',
+    data,
+  };
+}
+
+export function uploadFail(error) {
+  return {
+    type: 'UPLOAD_DOCUMENT_FAIL',
+    error,
+  };
+}
+
+export function uploadDocumentRequest(data) {  
+  //let data = new FormData();
+  //data.append('file', document);
+  //data.append('name', name);
+  console.log("U are in upload request ")
+  const config = {
+    headers: {
+    	'content-type': 'multipart/form-data'
+    }
+  }
+  return (dispatch) => {
+    return Axios.post(`${apiUrl}products`, data, config)
+      .then(response => dispatch(success("Saved Succesfully")))
+      .catch(error => dispatch(errorMessage(error.message)))
+  }
 }

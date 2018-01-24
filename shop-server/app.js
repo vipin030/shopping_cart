@@ -9,9 +9,13 @@ const jwt = require('jsonwebtoken');
 const passport = require("passport");
 const passportJWT = require("passport-jwt");
 const Sequelize = require('sequelize-values')();
+const uuid = require('node-uuid');
+const sequelize = require('sequelize');
 
+//Routes
 const index = require('./routes/index');
 const users = require('./routes/users');
+const products = require('./routes/product');
 //Models
 const models = require("./models");
 
@@ -29,14 +33,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
-var ExtractJwt = passportJWT.ExtractJwt;
-var JwtStrategy = passportJWT.Strategy;
+
+/* JwT Implemantation */
+const ExtractJwt = passportJWT.ExtractJwt;
+const JwtStrategy = passportJWT.Strategy;
 var jwtOptions = {}
 jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 jwtOptions.secretOrKey = 'SecureSpaceMaker';
 var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
   // usually this would be a database call:
-  var user = models.User.findById(jwt_payload.id).then(function(user){
+  let user = models.User.findById(jwt_payload.id).then(function(user){
     if (user) {
       next(null, user.get());
     } else {
@@ -46,69 +52,36 @@ var strategy = new JwtStrategy(jwtOptions, function(jwt_payload, next) {
 });
 passport.use(strategy);
 app.use(passport.initialize());
+
+
 app.use('/', index);
 app.use('/users', users);
+app.use('/products', products);
 
 app.post("/login",function(req,res) {
   if(req.body.username && req.body.password) {
     var username = req.body.username;
     var password = req.body.password;
   }
-  var user = models.User.findOne({where:{username: username}}).
+  let user = models.User.findOne({where:{username: username}}).
   then(function(user) {
     if(!user){
       res.status(401).json({message:'User does not exist'});
     }
     else {
       if(user.password === password) {
-        var payload ={id: user.id};
-        var token = jwt.sign(payload, jwtOptions.secretOrKey);
+        let payload = {id: user.id};
+        let token = jwt.sign(payload, jwtOptions.secretOrKey);
         res.json({message:"ok", token: token})
       }
       else {
-        res.status(401).json({errors: {form: 'Password doesn"t match'} })
+        res.status(401).json({message: 'Password doesn"t match'});
       }
     }
   })
   
 })
 
-app.get('/products', function(req,res){
-  models.Product.findAll({include: [{model: models.Stock, attributes: ['inventory'], nested: true}],}).then(function(products) {
-    var product = Sequelize.getValues(products);
-    console.log(product);
-    product = product.map(p => {
-      p['inventory'] = p['Stock']['inventory'] || 0;
-      delete p['Stock'];
-      return p;
-    })
-    res.json(product);
-  })
-})
-
-app.post('/product', function(req,res) {
-  console.log("Records are",req.body);
-  models.Product.create(req.body).then(product => {
-    console.log("New Product is", Sequelize.getValues(product))
-    res.json(Sequelize.getValues(product))
-  }, error => {
-    res.json({error:error});
-  })
-})
-
-app.put('/product/:id', function(req,res) {
-    console.log(req.body,req.params.id);
-    models.Product.update(req.body,{where: {id:req.params.id}}).then(product => {
-      console.log("updated Product is", Sequelize.getValues(product))
-      res.json(Sequelize.getValues(product));
-    }).catch(error => {
-      res.json({error:error});
-    });
-})
-
-app.post('/file-upload', function(req, res) {
-  console.log(req.body,"please help me god" )
-})
 
 app.use(passport.authenticate('jwt', { session: false }));
 
@@ -118,7 +91,7 @@ app.get("/secret", function(req, res){
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });

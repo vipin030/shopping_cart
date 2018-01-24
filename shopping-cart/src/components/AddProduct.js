@@ -1,12 +1,37 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { Field } from 'redux-form';
-import { FileUpload } from 'redux-file-upload';
+import {
+  Control,
+  Form,
+  combineForms
+} from 'react-redux-form';
 
 import { required, renderField } from '../util/formValidation.js';
 
-const AddProject = ({}) => {
+const AddProject = ({ handleSubmit, uploadDocumentRequest, messageObj }) => {
+  let image,image_data;
+  const onFormSubmit = (data) => {
+        let formData = new FormData();
+        console.log(data,image_data);
+        formData.append('name', data.name)
+        formData.append('file', image_data);
+        formData.append('description', data.name)
+        formData.append('price', data.name)
+        formData.append('image', '')
+        formData.append('UserId',1)
+        console.log(formData);
+        uploadDocumentRequest(formData).then((response, image)=>{
+          console.log("Response.....",response)
+          image.value = "";
+        });
+  }
+  const onChange = (e) => {
+        if(e.target.name === "image")
+          image_data = e.target.files[0];
+  }
 	return (
-		<form>
+		<form  onSubmit={handleSubmit(onFormSubmit)} encType="multipart/form-data">
 		<div className="panel panel-default">
         	<div className="input-group">
               <label className="col-sm-2 control-label">Name: </label>
@@ -32,16 +57,15 @@ const AddProject = ({}) => {
          	<div className="input-group">
               <label className="col-sm-2 control-label">Picture: </label>
               <div className="col-sm-10">
-              <FileUpload allowedFileTypes={['jpg','png']} data={{type:'picture'}}
-              dropzoneId="fileUpload" url="http://localhost:3000/file-upload">
-                <button>
-                Click or drag here
-                </button>
-              </FileUpload>
+              
+              <input type="file" name="image" onChange={onChange} />
               </div>
           	</div>
          	<br/>
          	<div><button type="submit">Save</button></div>
+          
+          { messageObj.message && (<div>{messageObj.message}</div>)}
+
          </div>
          </form>
 		)

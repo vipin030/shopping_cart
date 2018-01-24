@@ -3,7 +3,7 @@ import React from 'react';
 const ProductDetails = ({props, addToCart}) => (
 	<div>
 	<div className="product-details-image">
-	<img src={require('../images/'+props.image)} />
+	<img alt="Prodcut" src={require('../images/'+props.image)} />
 	</div>
 	<div className="product-description">
 	<b>{props.name}</b>

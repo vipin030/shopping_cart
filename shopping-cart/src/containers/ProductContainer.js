@@ -16,7 +16,7 @@ const ProductContainer = ({ products, selectProduct, history }) => {
 	{products.map((product,index)=> {
 		return (
 			<div>
-			{parseInt(index)%3==0 && (<div className="clearfix"></div>)}
+			{parseInt(index)%3 === 0 && (<div className="clearfix"></div>)}
 		<div className="col-md-4">
 		<Product id={product.id} key={product.id} name={product.name}
 		price={product.price} image={product.image} stock={product.inventory} selectProduct={()=>goToProduct(product)} />
